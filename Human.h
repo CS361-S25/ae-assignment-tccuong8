@@ -3,14 +3,14 @@
 
 #include "Org.h"
 
-class Human : public Entity
+class Human : public Organism
 {
     double exhaustion;
     double birth_cost;
     int species;
 
 public:
-    Human(emp::Ptr<emp::Random> _random, double _exhaustion = 1, double _birth_cost = 50, double _points = 100.0) : Entity(_random, _points), exhaustion(_exhaustion), birth_cost(_birth_cost), species(1) { ; }
+    Human(emp::Ptr<emp::Random> _random, double _exhaustion = 1, double _birth_cost = 50, double _points = 100.0) : Organism(_random, _points), exhaustion(_exhaustion), birth_cost(_birth_cost), species(1) { ; }
 
     int GetSpecies() { return species; }
 
@@ -21,7 +21,7 @@ public:
         this->AddPoints(-exhaustion);
     }
 
-    void Interact(emp::Ptr<Entity> target)
+    void Interact(emp::Ptr<Organism> target)
     {
         double my_points = this->GetPoints();
         double target_points = target->GetPoints();
@@ -54,18 +54,18 @@ public:
         return 0;
     }
 
-    emp::Ptr<Entity> CheckReproduction()
+    emp::Ptr<Organism> CheckReproduction()
     {
         if (this->CanReproduce() == 1)
         {
-            emp::Ptr<Entity> offspring = new Human(this->GetRandom());
+            emp::Ptr<Organism> offspring = new Human(this->GetRandom());
             this->AddPoints(-birth_cost);
             return offspring;
         }
         double mutating = GetRandom()->GetDouble(0, 1);
         if (mutating > 0.1)
         {
-            emp::Ptr<Entity> mutation = new Zombie(this->GetRandom());
+            emp::Ptr<Organism> mutation = new Zombie(this->GetRandom());
             this->SetPoints(0); // The human spontaneously mutates into a zombie
             return mutation;
         }

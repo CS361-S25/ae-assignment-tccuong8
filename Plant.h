@@ -4,14 +4,14 @@
 #include "Org.h"
 #include "emp/math/math.hpp"
 
-class Plant : public Entity
+class Plant : public Organism
 {
     double synthesis;
     double birth_cost;
     int species;
 
 public:
-    Plant(emp::Ptr<emp::Random> _random, double _synthesis = 100, double _birth_cost = 50, double _points = 100.0) : Entity(_random, _points), synthesis(_synthesis), birth_cost(_birth_cost), species(3) { ; }
+    Plant(emp::Ptr<emp::Random> _random, double _synthesis = 100, double _birth_cost = 50, double _points = 100.0) : Organism(_random, _points), synthesis(_synthesis), birth_cost(_birth_cost), species(3) { ; }
 
     int GetSpecies() { return species; }
 
@@ -22,7 +22,7 @@ public:
         this->AddPoints(synthesis);
     }
 
-    void Interact(emp::Ptr<Entity> target)
+    void Interact(emp::Ptr<Organism> target)
     {
         double my_points = this->GetPoints();
         double target_points = target->GetPoints();
@@ -59,11 +59,11 @@ public:
         return 0;
     }
 
-    emp::Ptr<Entity> CheckReproduction()
+    emp::Ptr<Organism> CheckReproduction()
     {
         if (this->CanReproduce() == 1)
         {
-            emp::Ptr<Entity> offspring = new Plant(this->GetRandom());
+            emp::Ptr<Organism> offspring = new Plant(this->GetRandom());
             this->AddPoints(-birth_cost);
             return offspring;
         }

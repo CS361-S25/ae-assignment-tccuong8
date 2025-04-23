@@ -8,14 +8,14 @@
 
 #include "Org.h"
 
-class OrgWorld : public emp::World<Entity>
+class OrgWorld : public emp::World<Organism>
 {
 
     emp::Random &random;
     emp::Ptr<emp::Random> random_ptr;
 
 public:
-    OrgWorld(emp::Random &_random) : emp::World<Entity>(_random), random(_random)
+    OrgWorld(emp::Random &_random) : emp::World<Organism>(_random), random(_random)
     {
         random_ptr.New(_random);
     }
@@ -27,9 +27,9 @@ public:
     // First, you’ll need to make a new method in your World subclass that removes an organism from the population and returns it. I recommend calling it ExtractOrganism. You already know how to get an organism at a particular position in the world, and ‘removing’ it from the population just involves setting its spot to null:
     // pop[i] = nullptr;
     // Then you just need to return the organism that you grabbed.
-    emp::Ptr<Entity> ExtractOrganism(int i)
+    emp::Ptr<Organism> ExtractOrganism(int i)
     {
-        emp::Ptr<Entity> org = pop[i];
+        emp::Ptr<Organism> org = pop[i];
         pop[i] = nullptr;
         return org;
     }
@@ -57,7 +57,7 @@ public:
 
     void Update()
     {
-        emp::World<Entity>::Update();
+        emp::World<Organism>::Update();
 
         // Natural organism's existential process
         emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
@@ -67,7 +67,7 @@ public:
             {
                 continue;
             }
-            emp::Ptr<Entity> org = pop[i];
+            emp::Ptr<Organism> org = pop[i];
             if (org->GetPoints() <= 0)
             {
                 std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has died!" << std::endl;
@@ -99,7 +99,7 @@ public:
                 std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has no space to give birth." << std::endl;
                 continue;
             }
-            emp::Ptr<Entity> propagate = pop[i]->CheckReproduction();
+            emp::Ptr<Organism> propagate = pop[i]->CheckReproduction();
             // this is implemented in Organism
             if (propagate)
             {
@@ -107,7 +107,7 @@ public:
                 AddOrgAt(propagate, propagate_pos);
                 // i is the parent's position in the world
             }
-            emp::Ptr<Entity> movedOrg = ExtractOrganism(i);
+            emp::Ptr<Organism> movedOrg = ExtractOrganism(i);
 
             AddOrgAt(movedOrg, this->NextMove(i));
         }

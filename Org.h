@@ -4,14 +4,14 @@
 #include "emp/math/Random.hpp"
 #include "emp/tools/string_utils.hpp"
 
-class Entity
+class Organism
 {
     int species;
     double points;
     emp::Ptr<emp::Random> random;
 
 public:
-    Entity(emp::Ptr<emp::Random> _random, double _points = 0.0) : random(_random), points(_points) { ; }
+    Organism(emp::Ptr<emp::Random> _random, double _points = 0.0) : random(_random), points(_points) { ; }
 
     void SetPoints(double _in) { points = _in; }
     void AddPoints(double _in) { points += _in; }
@@ -26,7 +26,7 @@ public:
         ;
     }
 
-    virtual void Interact(emp::Ptr<Entity> target)
+    virtual void Interact(emp::Ptr<Organism> target)
     {
         // Default interaction is to do nothing
     }
@@ -36,7 +36,7 @@ public:
         return 0;
     }
 
-    virtual emp::Ptr<Entity> CheckReproduction()
+    virtual emp::Ptr<Organism> CheckReproduction()
     {
         return nullptr;
     }

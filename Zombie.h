@@ -3,14 +3,14 @@
 
 #include "Org.h"
 
-class Zombie : public Entity
+class Zombie : public Organism
 {
     double decay;
     int has_corpse;
     int species;
 
 public:
-    Zombie(emp::Ptr<emp::Random> _random, double _decay = 1, double _points = 100.0) : Entity(_random, _points), decay(_decay), has_corpse(0), species(2) { ; }
+    Zombie(emp::Ptr<emp::Random> _random, double _decay = 1, double _points = 100.0) : Organism(_random, _points), decay(_decay), has_corpse(0), species(2) { ; }
 
     int GetSpecies() { return species; }
 
@@ -21,7 +21,7 @@ public:
         this->AddPoints(-decay);
     }
 
-    void Interact(emp::Ptr<Entity> target)
+    void Interact(emp::Ptr<Organism> target)
     {
         double my_points = this->GetPoints();
         double target_points = target->GetPoints();
@@ -47,11 +47,11 @@ public:
         return has_corpse;
     }
 
-    emp::Ptr<Entity> CheckReproduction()
+    emp::Ptr<Organism> CheckReproduction()
     {
         if (this->CanReproduce() == 1)
         {
-            emp::Ptr<Entity> offspring = new Zombie(this->GetRandom());
+            emp::Ptr<Organism> offspring = new Zombie(this->GetRandom());
             has_corpse = 0; // Used the corpse for a new zombie
             return offspring;
         }
