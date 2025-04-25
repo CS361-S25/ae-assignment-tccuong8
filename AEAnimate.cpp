@@ -13,8 +13,8 @@ class AEAnimator : public emp::web::Animate
 {
 
     // arena width and height
-    const int num_h_boxes = 50;
-    const int num_w_boxes = 50;
+    const int num_h_boxes = 100;
+    const int num_w_boxes = 100;
     const double RECT_SIDE = 10;
     const double width{num_w_boxes * RECT_SIDE};
     const double height{num_h_boxes * RECT_SIDE};
@@ -29,32 +29,35 @@ public:
     {
         // shove canvas into the div
         // along with a control button
+        // and the grid structure
         doc << canvas;
         doc << GetToggleButton("Toggle");
         doc << GetStepButton("Step");
         world.SetPopStruct_Grid(num_w_boxes, num_h_boxes);
 
-        
-        this->SeedWorld(1, 20);
-        this->SeedWorld(2, 10);
-        this->SeedWorld(3, 10);
+        // Initial state
+        this->SeedWorld(1, (num_h_boxes + num_w_boxes));
+        this->SeedWorld(2, (num_h_boxes + num_w_boxes));
+        this->SeedWorld(3, (num_h_boxes + num_w_boxes));
 
     }
 
+    /**
+     * Takes in a species id and a number.
+     * Randomly insert the stated number of the corresponding species into the world.
+     * Only at unoccupied spaces.
+     * Returns nothing.
+    */
     void SeedWorld(int species, int num)
     {
-        // std::cout << "Seeding world with " << num << " species " << species << std::endl;
         int counts_left = num;
         emp::vector<size_t> schedule = emp::GetPermutation(random, world.GetSize());
-        // emp::vector<size_t> schedule = emp::GetPermutation(random, world.GetSize());
         for (size_t i : schedule)
         {
             std::cout << "i: " << i << std::endl;
             if (!world.IsOccupied(i) && counts_left > 0)
             {
-                // std::cout << "Org [" << i << "] available." << std::endl;
                 counts_left--;
-                // std::cout << "Adding" << std::endl;
 
                 emp::Ptr<Organism> org;
                 if (species == 1)
@@ -70,28 +73,35 @@ public:
                     org = new Plant(&random);
                 }
                 world.AddOrgAt(org, i);
-                std::cout << "Added" << std::endl;
             }
-            // else
-            // {
-                
-            // }
         }
-        // std::cout << "Finished running with " << num << " species " << species << std::endl;
     }
 
+    /**
+     * Takes in an x coordinante, a y coordinate, and a string describing an organism's color
+     * Draws that organism at the stated address.
+     * Returns nothing.
+    */
     void DrawOrganism(int x, int y, std::string color)
     {
-        // Draw the organism at the given x and y coordinates
         canvas.Rect(x * RECT_SIDE, y * RECT_SIDE, RECT_SIDE, RECT_SIDE, color, "black");
     }
 
+    /**
+     * Takes in an x coordinante, and a y coordinate.
+     * Draws a blank, default white cell at the stated address.
+     * Returns nothing.
+    */
     void DrawBlank(int x, int y)
     {
-        // Draw a blank rectangle at the given x and y coordinates
         canvas.Rect(x * RECT_SIDE, y * RECT_SIDE, RECT_SIDE, RECT_SIDE, "white", "black");
     }
 
+    /**
+     * Takes in nothing. 
+     * Clears the canvas, updates the world, and draws the result. 
+     * Returns nothing. 
+    */
     void DoFrame() override
     {
         canvas.Clear();
