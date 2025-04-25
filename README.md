@@ -1,6 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/-GCLf3vW)
 
-# Life and Death
+# World of Life and Death
 
 My world showcases the interaction between 3 species: Humans, Zombies, and Plants. In each update step, each organism can interact with another organism, give birth to something, and move somwhere.
 
