@@ -11,7 +11,7 @@ class Plant : public Organism
     int species;
 
 public:
-    Plant(emp::Ptr<emp::Random> _random, double _synthesis = 100, double _birth_cost = 50, double _points = 100.0) : Organism(_random, _points), synthesis(_synthesis), birth_cost(_birth_cost), species(3) { ; }
+    Plant(emp::Ptr<emp::Random> _random, double _synthesis = 100, double _birth_cost = 100, double _points = 100.0) : Organism(_random, _points), synthesis(_synthesis), birth_cost(_birth_cost), species(3) { ; }
 
     int GetSpecies() { return species; }
 
@@ -46,7 +46,7 @@ public:
         }
         else if (target->GetSpecies() == 3) // If the target is a plant
         {
-            this->SetPoints((my_points + target_points) * 3 / 2); // Share points with the other plant
+            this->SetPoints((my_points + target_points) / 2); // Share points with the other plant
         }
     }
 

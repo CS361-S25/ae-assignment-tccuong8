@@ -96,20 +96,19 @@ public:
             int propagate_pos = this->NextMove(i);
             if (propagate_pos == i)
             {
-                std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has no space to give birth." << std::endl;
+                // std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has no space to give birth." << std::endl;
                 continue;
             }
             emp::Ptr<Organism> propagate = pop[i]->CheckReproduction();
             // this is implemented in Organism
             if (propagate)
             {
-                std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has reproduced." << std::endl;
+                // std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has reproduced." << std::endl;
                 AddOrgAt(propagate, propagate_pos);
                 // i is the parent's position in the world
             }
             emp::Ptr<Organism> movedOrg = ExtractOrganism(i);
-
-            AddOrgAt(movedOrg, this->NextMove(i));
+            AddOrgAt(movedOrg, GetRandomNeighborPos(i));
         }
     }
 };

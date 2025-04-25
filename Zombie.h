@@ -10,7 +10,7 @@ class Zombie : public Organism
     int species;
 
 public:
-    Zombie(emp::Ptr<emp::Random> _random, double _decay = 1, double _points = 100.0) : Organism(_random, _points), decay(_decay), has_corpse(0), species(2) { ; }
+    Zombie(emp::Ptr<emp::Random> _random, double _points = 20.0, double _decay = 30) : Organism(_random, _points), decay(_decay), has_corpse(0), species(2) { ; }
 
     int GetSpecies() { return species; }
 
@@ -18,7 +18,7 @@ public:
 
     void Process()
     {
-        this->AddPoints(-decay);
+        this->AddPoints(-(this->GetPoints() * decay / 100.0 + 10));
     }
 
     void Interact(emp::Ptr<Organism> target)
@@ -29,16 +29,26 @@ public:
         {
             if (my_points <= target_points)
             {
-                this->SetPoints(-my_points); // Killed by the human, turning into compost
+                this->AddPoints(-target_points); // Harmed by the human
             }
             else
             {
                 has_corpse = 1; // The zombie has a corpse
             }
         }
-        else if (target->GetSpecies() == 3 && my_points < 0) // If the target is a plant and I'm a compost
-        {
-            this->SetPoints(0); // The compost is depleted
+        // else if (target->GetSpecies() == 3 && my_points < 0) // If the target is a plant and I'm a compost
+        // {
+        //     if (my_points < 0)
+        //     {
+        //         this->SetPoints(0); // The compost is depleted
+        //     }
+        //     else
+        //     {
+        //         // this->AddPoints(target_points); // Gain points from absorbing the plant
+        //     }
+        // }
+        else {
+            this->AddPoints(target_points); // The zombie eats anything, including other zombies
         }
     }
 

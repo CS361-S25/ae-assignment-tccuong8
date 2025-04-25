@@ -10,7 +10,7 @@ class Human : public Organism
     int species;
 
 public:
-    Human(emp::Ptr<emp::Random> _random, double _exhaustion = 1, double _birth_cost = 50, double _points = 100.0) : Organism(_random, _points), exhaustion(_exhaustion), birth_cost(_birth_cost), species(1) { ; }
+    Human(emp::Ptr<emp::Random> _random, double _points = 100.0, double _exhaustion = 1, double _birth_cost = 30) : Organism(_random, _points), exhaustion(_exhaustion), birth_cost(_birth_cost), species(1) { ; }
 
     int GetSpecies() { return species; }
 
@@ -38,10 +38,7 @@ public:
         }
         else if (target->GetSpecies() == 3) // If the target is a plant
         {
-            if (target_points > 100)
-            {
-                this->AddPoints(target->GetPoints()); // Gain points from eating the plant
-            }
+            this->AddPoints(target_points); // Gain points from eating the plant
         }
     }
 
@@ -58,14 +55,14 @@ public:
     {
         if (this->CanReproduce() == 1)
         {
-            emp::Ptr<Organism> offspring = new Human(this->GetRandom());
+            emp::Ptr<Organism> offspring = new Human(this->GetRandom(), birth_cost);
             this->AddPoints(-birth_cost);
             return offspring;
         }
         double mutating = GetRandom()->GetDouble(0, 1);
-        if (mutating > 0.1)
+        if (mutating < 0.3)
         {
-            emp::Ptr<Organism> mutation = new Zombie(this->GetRandom());
+            emp::Ptr<Organism> mutation = new Zombie(this->GetRandom(), this->GetPoints()/2);
             this->SetPoints(0); // The human spontaneously mutates into a zombie
             return mutation;
         }
