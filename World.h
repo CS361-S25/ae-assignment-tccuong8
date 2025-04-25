@@ -24,9 +24,11 @@ public:
     {
     }
 
-    // First, you’ll need to make a new method in your World subclass that removes an organism from the population and returns it. I recommend calling it ExtractOrganism. You already know how to get an organism at a particular position in the world, and ‘removing’ it from the population just involves setting its spot to null:
-    // pop[i] = nullptr;
-    // Then you just need to return the organism that you grabbed.
+    /**
+     * Takes in an index of a known organism.
+     * Removes that organism form the world.
+     * Returns the organism, which is meant to be added back to the world in a new spot to simulate movement.
+    */
     emp::Ptr<Organism> ExtractOrganism(int i)
     {
         emp::Ptr<Organism> org = pop[i];
@@ -34,6 +36,11 @@ public:
         return org;
     }
 
+    /**
+     * Takes in an index of a known organism and optionally if it's looking for another organism to interact with.
+     * Tries 3 times to randomly find either an interactible organism or an empty spot to move to.
+     * Returns the index of the found target/empty spot. If none was found, the organism stays put.
+    */
     int NextMove(int i, int findingTarget = 0)
     {
         for (int x = 0; x < 3; ++x)
@@ -55,11 +62,17 @@ public:
         return i;
     }
 
+    /**
+     * Takes in nothing.
+     * Simulates the actions done by eeach organism in a random order.
+     * Modifies the global world to reflect results.
+     * Returns nothing.
+    */
     void Update()
     {
         emp::World<Organism>::Update();
 
-        // Natural organism's existential process
+        // Organisms die or progress in life
         emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
         for (int i : schedule)
         {
@@ -80,7 +93,7 @@ public:
             }
         }
 
-        // Try to interact, propagate, then move
+        // Organisms try to interact, propagate, and then move in that order.
         schedule = emp::GetPermutation(random, GetSize());
         for (int i : schedule)
         {
@@ -96,16 +109,12 @@ public:
             int propagate_pos = this->NextMove(i);
             if (propagate_pos == i)
             {
-                // std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has no space to give birth." << std::endl;
                 continue;
             }
             emp::Ptr<Organism> propagate = pop[i]->CheckReproduction();
-            // this is implemented in Organism
             if (propagate)
             {
-                // std::cout << "Org [" << i << "] Species [" << pop[i]->GetSpecies() << "] has reproduced." << std::endl;
                 AddOrgAt(propagate, propagate_pos);
-                // i is the parent's position in the world
             }
             emp::Ptr<Organism> movedOrg = ExtractOrganism(i);
             AddOrgAt(movedOrg, GetRandomNeighborPos(i));
