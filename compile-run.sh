@@ -1,2 +1,2 @@
-emcc -std=c++17 -IEmpirical/include/ -Os --js-library Empirical/include/emp/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s NO_EXIT_RUNTIME=1 AEAnimate.cpp -o AEAnimate.js
+emcc -std=c++17 -IEmpirical/include/ -Os --js-library Empirical/include/emp/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=268435456 AEAnimate.cpp -o AEAnimate.js
 python3 -m http.server

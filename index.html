@@ -1,6 +1,29 @@
 <body>
-    <div id="target"> </div>
-  </body>
-  
-  <script src="https://code.jquery.com/jquery-1.11.2.min.js" integrity="sha256-Ls0pXSlb7AYs7evhd+VLnWsZ/AqEHcXBeMZUycz/CcA=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="AEAnimate.js"></script>
+  <h1>World of Life and Death</h1>
+  <div id="target"> </div>
+  <p>
+    This is a grid world composed of cells, and in each cell, there can either be a Human (blue), Zombie (Red), Plant
+    (Green), or nothing (White). Plants generate energy and constantlyspread very quickly, while Humans and Zombies
+    constantly
+    lose energy and need to eat to survive and spread themselves.
+  </p>
+  <p>
+    Humans can eat Plants, and only make offsprings when there's plenty of energy stored. They can attack Zombies and
+    deal damage equal to their own stored energy. Unfortunately, there's a zombie apocalypse happening, and Humans have
+    a chance to suddenly mutate into Zombies without prior warnings.
+  </p>
+  <p>
+    Zombies also eat Plants, but that only let them live a little bit longer since they decay much faster than Humans, and can't
+    make offsprings. Instead, when engaged in combat with Humans, if they have more energy, the Humans will be defeated
+    and converted into Zombies.
+  </p>
+  <p>
+    Pressing 'Start' will let the initial populations of the 3 species to start moving and acting based on these
+    premises. Pressing 'Step' during that will speed up the process, but using it while the world is on pause allow you
+    to see how the cells change in each interation.
+  </p>
+</body>
+
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"
+  integrity="sha256-Ls0pXSlb7AYs7evhd+VLnWsZ/AqEHcXBeMZUycz/CcA=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="AEAnimate.js"></script>
