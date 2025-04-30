@@ -28,7 +28,7 @@ public:
      * Takes in an index of a known organism.
      * Removes that organism form the world.
      * Returns the organism, which is meant to be added back to the world in a new spot to simulate movement.
-    */
+     */
     emp::Ptr<Organism> ExtractOrganism(int i)
     {
         emp::Ptr<Organism> org = pop[i];
@@ -40,7 +40,7 @@ public:
      * Takes in an index of a known organism and optionally if it's looking for another organism to interact with.
      * Tries 3 times to randomly find either an interactible organism or an empty spot to move to.
      * Returns the index of the found target/empty spot. If none was found, the organism stays put.
-    */
+     */
     int NextMove(int i, int findingTarget = 0)
     {
         for (int x = 0; x < 3; ++x)
@@ -64,14 +64,12 @@ public:
 
     /**
      * Takes in nothing.
-     * Simulates the actions done by eeach organism in a random order.
+     * Simulates each organism's development, death or something else in a random order.
      * Modifies the global world to reflect results.
      * Returns nothing.
-    */
-    void Update()
+     */
+    void DevelopOrganisms()
     {
-        emp::World<Organism>::Update();
-
         // Organisms die or progress in life
         emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
         for (int i : schedule)
@@ -92,32 +90,75 @@ public:
                 org->Process();
             }
         }
+    }
 
-        // Organisms try to interact, propagate, and then move in that order.
-        schedule = emp::GetPermutation(random, GetSize());
+    /**
+     * Takes in an index of a known organism.
+     * Tries to find a neighboring organism to interact with.
+     * If one is found, it interacts with it.
+     * Returns nothing.
+     */
+    void TryInteract(int i)
+    {
+        int interact_pos = this->NextMove(i, 1);
+        if (interact_pos != i)
+        {
+            pop[i]->Interact(pop[interact_pos]);
+        }
+    }
+
+    /**
+     * Takes in an index of a known organism.
+     * Checks if the organism can reproduce.
+     * If it can, it tries to find a neighboring empty space to place the offspring.
+     * Returns nothing.
+     */
+    void TryReproduce(int i)
+    {
+        int propagate_pos = this->NextMove(i);
+        if (propagate_pos == i)
+        {
+            return;
+        }
+        emp::Ptr<Organism> propagate = pop[i]->CheckReproduction();
+        if (propagate)
+        {
+            AddOrgAt(propagate, propagate_pos);
+        }
+    }
+
+    /**
+     * Takes in an index of a known organism.
+     * Moves it to a neighboring space, can even overwrite another organism.
+     * Returns nothing.
+     */
+    void TryMove(int i)
+    {
+        emp::Ptr<Organism> movedOrg = ExtractOrganism(i);
+        AddOrgAt(movedOrg, GetRandomNeighborPos(i));
+    }
+
+    /**
+     * Takes in nothing.
+     * Simulates the actions done by each organism in a random order.
+     * Modifies the global world to reflect results.
+     * Returns nothing.
+     */
+    void Update()
+    {
+        emp::World<Organism>::Update();
+        this->DevelopOrganisms();
+
+        emp::vector<size_t> schedule = emp::GetPermutation(random, GetSize());
         for (int i : schedule)
         {
             if (!IsOccupied(i))
             {
                 continue;
             }
-            int interact_pos = this->NextMove(i, 1);
-            if (interact_pos != i)
-            {
-                pop[i]->Interact(pop[interact_pos]);
-            }
-            int propagate_pos = this->NextMove(i);
-            if (propagate_pos == i)
-            {
-                continue;
-            }
-            emp::Ptr<Organism> propagate = pop[i]->CheckReproduction();
-            if (propagate)
-            {
-                AddOrgAt(propagate, propagate_pos);
-            }
-            emp::Ptr<Organism> movedOrg = ExtractOrganism(i);
-            AddOrgAt(movedOrg, GetRandomNeighborPos(i));
+            this->TryInteract(i);
+            this->TryReproduce(i);
+            this->TryMove(i);
         }
     }
 };
