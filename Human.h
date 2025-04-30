@@ -56,12 +56,12 @@ public:
 
     /**
      * Takes in nothing.
-     * Humans can afford to reproduce when they have more than twice the energy needed to give birth.
+     * Humans can afford to reproduce when they have extra energy reserved beyond the energy needed to give birth.
      * Returns if the human is ready to reproduce. 
     */
     int CanReproduce()
     {
-        if (this->GetPoints() > birth_cost * 2)
+        if (this->GetPoints() > birth_cost * 1.5)
         {
             return 1;
         }
